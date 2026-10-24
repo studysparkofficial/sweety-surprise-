@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Sweety ❤️</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffd1df 0%, #ffb6c1 50%, #ffc0cb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overscroll-behavior-y: contain;
+        }
+
+        .handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Floating Hearts Animation */
+        .floating-heart {
+            position: fixed;
+            bottom: -20px;
+            opacity: 0;
+            animation: float 6s ease-in infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.2) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background-color: #ff4d6d;
+            clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z');
+            animation: fall linear forwards;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* Scratch Canvas specific styles */
+        #scratch-canvas {
+            touch-action: none; /* Prevents default touch actions like scrolling */
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Virtual Hug Modal Animation */
+        #hug-modal {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: scale(1) !important;
+        }
+        
+        .modal-inactive {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 relative">
+
+    <!-- Background Floating Hearts -->
+    <div id="floating-background"></div>
+
+    <!-- Main Container -->
+    <main class="glass-card w-full max-w-md rounded-3xl shadow-[0_20px_50px_rgba(255,105,180,0.3)] p-6 md:p-8 z-10 relative mt-4 mb-8">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-6">
+            <h1 class="handwriting text-4xl md:text-5xl text-rose-600 mb-2">For My Sweety ❤️</h1>
+            <p class="text-gray-600 text-sm md:text-base">I have a little surprise for you... 🧸🌷</p>
+        </div>
+
+        <!-- Interactive Scratch Area -->
+        <div class="relative w-full aspect-[4/5] max-h-[450px] mx-auto rounded-2xl shadow-inner overflow-hidden border-2 border-rose-100 bg-[#fff5f7]">
+            
+            <!-- Hidden Message (Underneath) -->
+            <div id="hidden-message" class="absolute inset-0 p-5 md:p-6 flex flex-col items-center justify-center text-center overflow-y-auto custom-scrollbar">
+                <h2 class="handwriting text-3xl text-rose-500 mb-3">My Sweety ❤️🥹</h2>
+                <div class="text-gray-700 text-sm md:text-sm space-y-3 leading-relaxed font-medium">
+                    <p>I know you might be upset with me right now, and I may not always express my feelings the right way. But I want you to know that you are genuinely special to me.</p>
+                    <p>Your smile matters to me, your feelings matter to me, and even our little conversations mean more to me than you might realise. 🫶🏻</p>
+                    <p>If I've hurt you, I'm sorry. I don't want to dismiss your feelings; I want to understand them.</p>
+                    <p>You don't have to stop being upset just to make me happy. I just hope this little surprise reminds you that you're loved, appreciated, and important to me.</p>
+                    <p>And if I could ask for one tiny thing today, it would be to see that beautiful smile of yours again. ❤️🌷</p>
+                </div>
+                <p class="handwriting text-2xl text-rose-600 mt-4 w-full text-right pr-4">Always your Anshul 💌</p>
+            </div>
+
+            <!-- Canvas Overlay (On Top) -->
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full cursor-pointer z-10"></canvas>
+        </div>
+
+        <!-- Controls -->
+        <div class="mt-6 flex flex-col items-center gap-4">
+            <button id="reveal-btn" class="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-rose-200 transition transform hover:-translate-y-1 active:scale-95 z-20">
+                Reveal my surprise 💌
+            </button>
+            
+            <!-- Post Reveal Buttons (Initially Hidden) -->
+            <div id="post-reveal-controls" class="hidden flex-col items-center w-full animation-fade-in z-20">
+                <button id="hug-btn" class="w-full bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 text-lg">
+                    Send a virtual hug 🤗
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-rose-700/70 text-sm font-medium z-10 mb-4">
+        Made with love by Anshul ❤️
+    </footer>
+
+    <!-- Virtual Hug Modal -->
+    <div id="hug-modal" class="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-inactive">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-pink-100 flex flex-col items-center">
+            <div class="text-6xl mb-4 animate-bounce">🫂</div>
+            <h3 class="handwriting text-3xl text-rose-500 mb-2">Biggest virtual hug for you, Sweety! ❤️</h3>
+            <p class="text-gray-600 mb-6 text-sm">Sending all my love and warmth straight to you.</p>
+            <button id="close-hug-btn" class="bg-rose-100 hover:bg-rose-200 text-rose-600 font-semibold py-2 px-6 rounded-full transition">
+                Receive Hug 🥰
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Background Animations
+            function createFloatingHearts() {
+                const bg = document.getElementById('floating-background');
+                const colors = ['#ff8fa3', '#ffb3c1', '#ffccd5', '#fff0f3'];
+                
+                for(let i = 0; i < 15; i++) {
+                    let heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.className = 'floating-heart absolute text-xl';
+                    heart.style.left = `${Math.random() * 100}vw`;
+                    heart.style.animationDuration = `${5 + Math.random() * 5}s`;
+                    heart.style.animationDelay = `${Math.random() * 5}s`;
+                    heart.style.fontSize = `${10 + Math.random() * 20}px`;
+                    heart.style.filter = `hue-rotate(${Math.random() * 30}deg)`;
+                    bg.appendChild(heart);
+                }
+            }
+            createFloatingHearts();
+
+            // --- Scratch Card Logic ---
+            const canvas = document.getElementById('scratch-canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            const revealBtn = document.getElementById('reveal-btn');
+            const postRevealControls = document.getElementById('post-reveal-controls');
+            
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let isRevealed = false;
+            
+            // Brush size
+            const brushSize = 35;
+
+            // Setup Canvas size and DPI
+            function initCanvas() {
+                // Get display size
+                const rect = canvas.parentElement.getBoundingClientRect();
+                
+                // Set actual internal canvas size to match display size exactly
+                // (Keeping scale at 1 to simplify touch math, as css handles responsiveness)
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+
+                // Fill with gold gradient
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#ffd700'); // Gold
+                gradient.addColorStop(0.5, '#ffdf00'); // Lighter gold
+                gradient.addColorStop(1, '#daa520'); // Goldenrod
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Add pattern overlay for "scratchable" look
+                ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                for(let i = 0; i < canvas.width; i+=4) {
+                    ctx.fillRect(i, 0, 1, canvas.height);
+                }
+
+                // Add text instruction
+                ctx.fillStyle = '#8b6508'; // Dark gold/brown
+                ctx.font = 'bold 24px Poppins';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Text shadow for premium look
+                ctx.shadowColor = 'rgba(255,255,255,0.6)';
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+                
+                ctx.fillText('Scratch here, Sweety ❤️', canvas.width / 2, canvas.height / 2);
+                
+                // Reset shadow for scratching
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // Key property: Erase pixels instead of drawing over them
+                ctx.globalCompositeOperation = 'destination-out';
+            }
+
+            // Initialize canvas on load
+            initCanvas();
+
+            // Handle resize (optional, but good for rotation)
+            window.addEventListener('resize', () => {
+                if(!isRevealed) {
+                    initCanvas();
+                }
+            });
+
+            // Get exact coordinates relative to canvas
+            function getCoordinates(e) {
+                const rect = canvas.getBoundingClientRect();
+                let clientX, clientY;
+
+                if (e.touches && e.touches.length > 0) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            // Start scratching
+            function startDrawing(e) {
+                if (isRevealed) return;
+                isDrawing = true;
+                const { x, y } = getCoordinates(e);
+                lastX = x;
+                lastY = y;
+                
+                // Draw initial dot
+                scratchLine(x, y, x, y);
+            }
+
+            // Draw line
+            function scratchLine(x1, y1, x2, y2) {
+                ctx.beginPath();
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = brushSize;
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+
+            // Scratching motion
+            let scratchCounter = 0;
+            function draw(e) {
+                if (!isDrawing || isRevealed) return;
+                
+                // Prevent scrolling while scratching
+                e.preventDefault();
+
+                const { x, y } = getCoordinates(e);
+                
+                scratchLine(lastX, lastY, x, y);
+                
+                lastX = x;
+                lastY = y;
+
+                // Check percentage every few moves to save performance
+                scratchCounter++;
+                if (scratchCounter % 15 === 0) {
+                    checkPercentage();
+                }
+            }
+
+            // End scratching
+            function stopDrawing() {
+                isDrawing = false;
+                if(!isRevealed) {
+                    checkPercentage();
+                }
+            }
+
+            // Event Listeners for Mouse
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+
+            // Event Listeners for Touch
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchcancel', stopDrawing);
+
+            // Calculate scratched percentage
+            function checkPercentage() {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                
+                // Check alpha channel (every 4th value). Step by 16 for faster approximation.
+                const totalPixels = pixels.length / 4;
+                const step = 4; // Check every 4th pixel for speed
+                let checkedPixels = 0;
+
+                for (let i = 3; i < pixels.length; i += 4 * step) {
+                    if (pixels[i] < 128) {
+                        transparentPixels++;
+                    }
+                    checkedPixels++;
+                }
+
+                const percentage = (transparentPixels / checkedPixels) * 100;
+                
+                // Reveal if more than 40% is scratched
+                if (percentage > 40) {
+                    revealSurprise();
+                }
+            }
+
+            // Reveal Animation & Logic
+            function revealSurprise() {
+                if (isRevealed) return;
+                isRevealed = true;
+                
+                // Fade out canvas
+                canvas.style.opacity = '0';
+                setTimeout(() => {
+                    canvas.style.visibility = 'hidden';
+                }, 800);
+
+                // Update controls UI
+                revealBtn.style.display = 'none';
+                postRevealControls.classList.remove('hidden');
+                postRevealControls.classList.add('flex');
+
+                // Trigger Confetti
+                triggerConfetti();
+            }
+
+            // Manual Reveal Button Fallback
+            revealBtn.addEventListener('click', revealSurprise);
+
+            // Confetti Effect
+            function triggerConfetti() {
+                const colors = ['#ff4d6d', '#ff8fa3', '#c9184a', '#ffb3c1'];
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = `${Math.random() * 100}vw`;
+                        confetti.style.top = `-20px`;
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        // Randomize size and animation duration
+                        const size = 10 + Math.random() * 15;
+                        confetti.style.width = `${size}px`;
+                        confetti.style.height = `${size}px`;
+                        
+                        const duration = 2 + Math.random() * 3;
+                        confetti.style.animationDuration = `${duration}s`;
+                        
+                        document.body.appendChild(confetti);
+                        
+                        // Cleanup
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, duration * 1000);
+                    }, i * 50); // Staggered creation
+                }
+            }
+
+            // Virtual Hug Logic
+            const hugBtn = document.getElementById('hug-btn');
+            const hugModal = document.getElementById('hug-modal');
+            const closeHugBtn = document.getElementById('close-hug-btn');
+
+            hugBtn.addEventListener('click', () => {
+                hugModal.classList.remove('modal-inactive');
+                hugModal.classList.add('modal-active');
+            });
+
+            closeHugBtn.addEventListener('click', () => {
+                hugModal.classList.remove('modal-active');
+                hugModal.classList.add('modal-inactive');
+            });
+        });
+    </script>
+</body>
+</html>
