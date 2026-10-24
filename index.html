@@ -96,6 +96,28 @@
             pointer-events: none;
             transform: scale(0.9);
         }
+        
+#hidden-message {
+    height: 100%;
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    box-sizing: border-box;
+}
+
+#hidden-message h2 {
+    flex-shrink: 0;
+}
+
+#hidden-message > div {
+    flex-shrink: 0;
+}
+
+#hidden-message > p {
+    flex-shrink: 0;
+}
+        
     </style>
 </head>
 <body class="flex flex-col items-center justify-center p-4 relative">
